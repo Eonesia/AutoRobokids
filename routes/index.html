@@ -12,20 +12,21 @@
       content="default-src 'self'; script-src 'self'"
     />
     <title>Hello from Electron renderer!</title>
+    <link rel="stylesheet" href="../routes/styles/styles.css">
   </head>
   <body>
     <div>
         <h1>AutoRobokids</h1>
-        <div>
-            <div id="loadBar">
+        <div class="container-upload">
+          <div>
+            <img class="uploadGif" src="../assets/icons/LoadFile.gif" alt="upload GIF">
+          </div>
+          Arrastra el archivo aquí<br/>
+          <div>o</div>
+          <button id="loadButton">Seleccionar archivo</button>
 
-            </div>
-            <div>
-              <img src="../assets/icons/LoadFile.gif" alt="upload GIF">
-            </div>
-            <button id="loadButton">Cargar Tabla</button>
-            <p id="info"></p>
         </div>
+
     </div>
   </body>
   <script src="../scripts/renderer.js"></script>
