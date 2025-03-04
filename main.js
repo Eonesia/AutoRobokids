@@ -1,7 +1,7 @@
 //Imports
 const { app, BrowserWindow, ipcMain } = require('electron/main')
 const path = require('node:path')
-
+var XLSX = require("xlsx");
 
 //Configura la ventana principal
 const createWindow = () => {

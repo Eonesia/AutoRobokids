@@ -1,6 +1,5 @@
 //Este script es el que se ejecuta en el proceso de renderizado.
 //Se puede usar para acceder a funciones o variables del proceso principal y mostrarlas.
-
 //Prueba
 /*
 const information = document.getElementById('info')
@@ -63,7 +62,9 @@ function handleFiles(files) {
 
   
         if (isValidFileType(file)) {
-          //Logica si el archivo añadido es una tabla
+            //Logica si el archivo añadido es una tabla
+            console.log('Es un archivo de tabla');
+            
         }
   
         
