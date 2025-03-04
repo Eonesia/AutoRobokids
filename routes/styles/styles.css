@@ -9,4 +9,6 @@
     padding: 20px;
 }
 
-
+#drop-area.drag-over {
+    background-color: #eee;
+  }
