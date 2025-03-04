@@ -11,12 +11,14 @@
       http-equiv="X-Content-Security-Policy"
       content="default-src 'self'; script-src 'self'"
     />
-    <title>Hello from Electron renderer!</title>
+    <title>AutoRobokids</title>
     <link rel="stylesheet" href="../routes/styles/styles.css">
   </head>
   <body>
-    <div>
-        <h1>AutoRobokids</h1>
+    <div class="navbar">
+        <h1 class="mainTitle">AutoRobokids</h1>
+    </div>
+    <div class="container">
         <div id="drop-area" class="container-upload" >
           <div>
             <img class="uploadGif" src="../assets/icons/LoadFile.gif" alt="upload GIF">
@@ -26,8 +28,6 @@
           <input type="file" id="loadButton"></input>
         </div>
         <input type="file" id="file-input" multiple hidden>
-
-
     </div>
   </body>
   <script src="../scripts/renderer.js"></script>
