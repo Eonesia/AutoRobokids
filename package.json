@@ -1,0 +1,15 @@
+{
+  "name": "autorobokids",
+  "version": "1.0.0",
+  "description": "Un programa para la automatización del envío de enlaces de pago de Robokids",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eonesia (Emilio & Angela)",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^35.0.0"
+  }
+}
