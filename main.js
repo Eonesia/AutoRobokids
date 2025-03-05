@@ -57,8 +57,9 @@ ipcMain.on('read-excel', (event, data) => {
     const worksheet = workbook.Sheets[firstSheetName];
     const jsonData = sheetToJsonWithCellRefs(worksheet);
     const matrix = jsonToMatrix(jsonData);
-    console.log(matrix);
-    console.log(matrix[1][1]);
+    printMatrix(matrix);
+    //console.log(matrix);
+    //console.log(matrix[1][1]);
     //console.log(jsonData);
     event.reply('read-excel-reply', worksheet);
 });
@@ -104,4 +105,23 @@ function jsonToMatrix(json) {
   }
 
   return matrix;
+}
+
+//Funcion para imprimir la matriz
+function printMatrix(matrix) {
+  // Imprimir encabezado de columnas
+  let header = '   ';
+  for (let i = 0; i < matrix[0].length; i++) {
+    header += `${i} `;
+  }
+  console.log(header);
+
+  // Imprimir filas con índices
+  for (let i = 0; i < matrix.length; i++) {
+    let row = `${i} `;
+    for (let j = 0; j < matrix[i].length; j++) {
+      row += `${matrix[i][j] || ''} `;
+    }
+    console.log(row);
+  }
 }
