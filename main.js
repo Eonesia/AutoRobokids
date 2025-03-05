@@ -56,7 +56,10 @@ ipcMain.on('read-excel', (event, data) => {
     const firstSheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[firstSheetName];
     const jsonData = sheetToJsonWithCellRefs(worksheet);
-    console.log(jsonData);
+    const matrix = jsonToMatrix(jsonData);
+    console.log(matrix);
+    console.log(matrix[1][1]);
+    //console.log(jsonData);
     event.reply('read-excel-reply', worksheet);
 });
 
@@ -74,4 +77,31 @@ function sheetToJsonWithCellRefs(sheet) {
     }
   }
   return result;
+}
+
+//Funcion que transforma el JSON en matriz
+
+function jsonToMatrix(json) {
+  // Determinar el rango de celdas
+  let minRow = Infinity, maxRow = -Infinity, minCol = Infinity, maxCol = -Infinity;
+  for (const cell in json) {
+    const { r, c } = XLSX.utils.decode_cell(cell);
+    if (r < minRow) minRow = r;
+    if (r > maxRow) maxRow = r;
+    if (c < minCol) minCol = c;
+    if (c > maxCol) maxCol = c;
+  }
+
+  // Crear una matriz vacía con el tamaño adecuado
+  const numRows = maxRow - minRow + 1;
+  const numCols = maxCol - minCol + 1;
+  const matrix = Array.from({ length: numRows }, () => Array(numCols).fill(null));
+
+  // Rellenar la matriz con los valores del JSON
+  for (const cell in json) {
+    const { r, c } = XLSX.utils.decode_cell(cell);
+    matrix[r - minRow][c - minCol] = json[cell];
+  }
+
+  return matrix;
 }
