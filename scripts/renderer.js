@@ -52,7 +52,7 @@ function handleFiles(files) {
         if (isValidFileType(file)) {
             //Logica si el archivo añadido es una tabla
             console.log('Es un archivo de tabla');
-            
+            exposed.readExcel(file);
         }
   
         

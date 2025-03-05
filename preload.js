@@ -4,5 +4,8 @@ const { contextBridge, ipcRenderer } = require('electron')
 
 contextBridge.exposeInMainWorld('exposed', {
   // Funcion que envie el archivo al proceso principal
-  readExcel: (data) => ipcRenderer.send('read-excel', data)
+  readExcel: (data) => {
+    ipcRenderer.send('read-excel', data)
+    console.log('Excel preload: ', data);
+  }
 })
