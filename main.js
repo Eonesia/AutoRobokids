@@ -55,6 +55,23 @@ ipcMain.on('read-excel', (event, data) => {
     const workbook = XLSX.read(data, {type: 'array'});
       const firstSheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[firstSheetName];
-    console.log(worksheet);
-    event.reply('read-excel-reply', xlData);
+      const jsonData = sheetToJsonWithCellRefs(worksheet);
+    console.log(jsonData);
+    event.reply('read-excel-reply', worksheet);
 });
+
+function sheetToJsonWithCellRefs(sheet) {
+  const result = {};
+  const range = XLSX.utils.decode_range(sheet['!ref']);
+  for (let R = range.s.r; R <= range.e.r; ++R) {
+    for (let C = range.s.c; C <= range.e.c; ++C) {
+      const cellAddress = { c: C, r: R };
+      const cellRef = XLSX.utils.encode_cell(cellAddress);
+      const cell = sheet[cellRef];
+      if (cell && cell.v !== undefined) {
+        result[cellRef] = cell.v;
+      }
+    }
+  }
+  return result;
+}
