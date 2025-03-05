@@ -40,4 +40,14 @@ app.whenReady().then(() => {
 //Asegurarse de que se cierra la aplicación cuando todas las ventanas están cerradas (excepto en macOS)
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit()
-  })
+})
+
+
+//Función que recibe el objeto de la hoja de cálculo y lo lee
+ipcMain.on('read-excel', (event, data) => {
+    const workbook = XLSX.read(data, { type: "buffer" });
+    const sheet_name_list = workbook.SheetNames;
+    const xlData = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+    console.log(xlData);
+    event.reply('read-excel-reply', xlData);
+});
