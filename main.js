@@ -45,6 +45,13 @@ app.on('window-all-closed', () => {
 
 //Función que recibe el objeto de la hoja de cálculo y lo lee
 ipcMain.on('read-excel', (event, data) => {
+    console.log('read-excel');
+    console.log('Excel main: ', data);
+    if (!data) {
+        console.log('No data');
+        event.reply('read-excel-reply', null);
+        return;
+    }
     const workbook = XLSX.read(data, { type: "buffer" });
     const sheet_name_list = workbook.SheetNames;
     const xlData = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);

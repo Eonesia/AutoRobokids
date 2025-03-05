@@ -39,6 +39,7 @@ function handleDrop(e) {
     }
 }
 
+//Funcion para manejar los archivos
 function handleFiles(files) {
     for (const file of files) {
       // Initializing the FileReader API and reading the file
