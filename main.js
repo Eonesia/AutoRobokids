@@ -53,8 +53,9 @@ ipcMain.on('read-excel', (event, data) => {
         return;
     }
     const workbook = XLSX.read(data, {type: 'array'});
-      const firstSheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[firstSheetName];
+    const firstSheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[firstSheetName];
+    console.log('Printeo de la hoja de cálculo');
     console.log(worksheet);
-    event.reply('read-excel-reply', xlData);
+    event.reply('read-excel-reply', worksheet);
 });
