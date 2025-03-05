@@ -1,7 +1,10 @@
 //Imports
 const { app, BrowserWindow, ipcMain } = require('electron/main')
 const path = require('node:path')
+const axios = require('axios')
 var XLSX = require("xlsx");
+const fs = require('fs');
+var request = require('request');
 
 //Configura la ventana principal
 const createWindow = () => {
@@ -43,6 +46,9 @@ app.on('window-all-closed', () => {
 })
 
 
+//Variables
+var filledMatrix = [];
+
 //Función que recibe el objeto de la hoja de cálculo y lo lee
 ipcMain.on('read-excel', (event, data) => {
     console.log('read-excel');
@@ -58,10 +64,16 @@ ipcMain.on('read-excel', (event, data) => {
     const jsonData = sheetToJsonWithCellRefs(worksheet);
     const matrix = jsonToMatrix(jsonData);
     printMatrix(matrix);
+    filledMatrix = matrix;
     //console.log(matrix);
     //console.log(matrix[1][1]);
     //console.log(jsonData);
-    event.reply('read-excel-reply', worksheet);
+    //event.reply('read-excel-reply', worksheet);
+
+    console.log('filledMatrix: ', filledMatrix);
+
+    //Llamada a la API de pruebas de redsys
+    callRestApi('Emilio', 'emiliogomeznef@hotmail.com', 687349178 , 0.01);
 });
 
 function sheetToJsonWithCellRefs(sheet) {
@@ -124,4 +136,65 @@ function printMatrix(matrix) {
     }
     console.log(row);
   }
+}
+
+
+
+//LLamada a la API de pruebas de redsys('https://sis-t.redsys.es:25443/sis/realizarPago) con axios
+function callRestApi(name, mail, phone, amount) {
+    axios.post('https://sis-t.redsys.es:25443/sis/realizarPago', {
+        "DS_MERCHANT_TRANSACTIONTYPE": "15",
+        "DS_MERCHANT_AMOUNT": "001",
+        "DS_MERCHANT_CUSTOMER_MOBILE": "687349178",
+        "DS_MERCHANT_CUSTOMER_MAIL": "emiliogomeznef@hotmail.com",
+        "DS_MERCHANT_TITULAR": "Emilio",
+        "DS_MERCHANT_MERCHANTCODE":"364130880",
+        "DS_MERCHANT_TERMINAL": "999",
+        "DS_MERCHANT_CURRENCY": "978",
+        "DS_MERCHANT_P2F_EXPIRYDATE": "14400",
+        "DS_MERCHANT_ORDER": "2025TESTTPV00",
+        "DS_MERCHANT_MERCHANTSIGNATURE": "sq7HjrUOBfKmC576ILgskD5srU870gJ7",
+        "DS_MERCHANT_CUSTOMERSMSTEXT": "Prueba de pago",
+        "DS_MERCHANT_P2F_XMLDATA": "<nombreComprador>NOMBRE DEL COMPRADOR</nombreComprador><direccionComprador>DIRECCION DEL COMPRADOR</direccionComprador> <textoLibre1>TEXTO LIBRE</textoLibre1><subjectMailCliente>ASUNTO EMAIL</subjectMailCliente>",
+    })
+    .then((response) => {
+        console.log('Response: ', response);
+        //Dunmp del contenido de response.data en un archivo de texto
+        
+        fs.writeFileSync('response.txt', JSON.stringify(response.data));
+
+    })
+    .catch((error) => {
+        console.error('Error: ', error);
+    });
+}
+
+//LLamada a la API de pruebas de redsys('https://sis-t.redsys.es:25443/sis/realizarPago) sin axios
+
+function callRestApi2(name, mail, phone, amount) {
+    var options = {
+        'method': 'POST',
+        'url': 'https://sis-t.redsys.es:25443/sis/realizarPago',
+        'headers': {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+        "DS_MERCHANT_TRANSACTIONTYPE": "F",
+        "DS_MERCHANT_AMOUNT": 0.01,
+        "DS_MERCHANT_CUSTOMER_MOBILE": 687349178,
+        "DS_MERCHANT_CUSTOMER_MAIL": "emiliogomeznef@hotmail.com",
+        "DS_MERCHANT_TITULAR": "Emilio",
+        "DS_MERCHANT_MERCHANTCODE": "364130880",
+        "DS_MERCHANT_TERMINAL": "999",
+        "DS_MERCHANT_CURRENCY": "978",
+        "DS_MERCHANT_P2F_EXPIRYDATE": "14400",
+        "DS_MERCHANT_ORDER": "2025TESTTPV00",
+        "DS_MERCHANT_CUSTOMERSMSTEXT": "Prueba de pago",
+        "DS_MERCHANT_P2F_XMLDATA": "<nombreComprador>NOMBRE DEL COMPRADOR</nombreComprador><direccionComprador>DIRECCION DEL COMPRADOR</direccionComprador> <textoLibre1>TEXTO LIBRE</textoLibre1><subjectMailCliente>ASUNTO EMAIL</subjectMailCliente>",
+        }),
+    };
+    request(options, function (error, response) {
+        if (error) throw new Error(error);
+        console.log(response.body);
+    });
 }
