@@ -52,7 +52,7 @@ ipcMain.on('read-excel', (event, data) => {
         event.reply('read-excel-reply', null);
         return;
     }
-    const workbook = XLSX.read(data, { type: "buffer" });
+    const workbook = XLSX.read(data, { type: "array" });
     const sheet_name_list = workbook.SheetNames;
     const xlData = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
     console.log(xlData);

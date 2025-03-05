@@ -41,24 +41,20 @@ function handleDrop(e) {
 
 //Funcion para manejar los archivos
 function handleFiles(files) {
-    for (const file of files) {
-      // Initializing the FileReader API and reading the file
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-  
-      // Once the file has been loaded, fire the processing
-      reader.onloadend = function (e) {
+  for (const file of files) {
+    // Initializing the FileReader API and reading the file
+    const reader = new FileReader();
+    reader.readAsArrayBuffer(file);
 
-  
-        if (isValidFileType(file)) {
-            //Logica si el archivo añadido es una tabla
-            console.log('Es un archivo de tabla');
-            exposed.readExcel(file);
-        }
-  
-        
-      };
-    }
+    // Once the file has been loaded, fire the processing
+    reader.onloadend = function (e) {
+      if (isValidFileType(file)) {
+          //Logica si el archivo añadido es una tabla
+          console.log('Es un archivo de tabla');
+          window.exposed.readExcel(file);
+      }
+    };
+  }
 }
 
 //Funcion que comprueba si el archivo es .xlsx
