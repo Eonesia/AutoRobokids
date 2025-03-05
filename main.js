@@ -53,9 +53,9 @@ ipcMain.on('read-excel', (event, data) => {
         return;
     }
     const workbook = XLSX.read(data, {type: 'array'});
-      const firstSheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[firstSheetName];
-      const jsonData = sheetToJsonWithCellRefs(worksheet);
+    const firstSheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[firstSheetName];
+    const jsonData = sheetToJsonWithCellRefs(worksheet);
     console.log(jsonData);
     event.reply('read-excel-reply', worksheet);
 });
