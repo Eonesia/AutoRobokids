@@ -38,6 +38,8 @@ errorClose.addEventListener('click', () => {
 //Drag&Drop
 const dropArea = document.getElementById('drop-area');
 const fileInput = document.getElementById('file-input');
+const fileInputManual = document.getElementById('loadButton');
+const fileNameDisplay = document.getElementById('fileName');
 
 //Funcion para evitar el comportamiento por defecto del "navegador"
 function preventDefaults(e) {
@@ -83,12 +85,15 @@ function handleFiles(files) {
       if (isValidFileType(file)) {
           //Logica si el archivo añadido es una tabla
           showSuccessMessage();
+          //Muestra el archivo tambien en el input manual
+          fileNameDisplay.textContent = file.name;
           window.exposed.readExcel(file);
       }else{
           //Muestra una alerta si el archivo no es una tabla
           showErrorMessage();
           //Elimina el archivo del input
           fileInput.value = '';
+          fileInputManual.value = '';
           console.log(fileInput.files);
       }
     };
