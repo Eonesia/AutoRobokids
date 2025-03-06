@@ -74,7 +74,28 @@ ipcMain.on('read-excel', (event, data) => {
     console.log('filledMatrix: ', filledMatrix);
 
     //Llamada a la API de pruebas de redsys
-    callRestApi('Emilio', 'emiliogomeznef@hotmail.com', 687349178 , 0.01);
+    //callRestApi('Emilio', 'emiliogomeznef@hotmail.com', 687349178 , 0.01);
+    //var value ={"DS_MERCHANT_AMOUNT":"145","DS_MERCHANT_CURRENCY":"978","DS_MERCHANT_MERCHANTCODE":"999008881","DS_MERCHANT_MERCHANTURL":"http://www.prueba.com/urlNotificacion.php","DS_MERCHANT_ORDER":"1446068581","DS_MERCHANT_TERMINAL":"1","DS_MERCHANT_TRANSACTIONTYPE":"0","DS_MERCHANT_URLKO":"http://www.prueba.com/urlKO.php","DS_MERCHANT_URLOK":"http://www.prueba.com/urlOK.php"}
+    var value = {
+      "DS_MERCHANT_AMOUNT": "145",
+      "DS_MERCHANT_CURRENCY": "978",
+      "DS_MERCHANT_MERCHANTCODE": "999008881",
+      "DS_MERCHANT_MERCHANTURL": "http://www.prueba.com/urlNotificacion.php",
+      "DS_MERCHANT_ORDER": "1446068581",
+      "DS_MERCHANT_TERMINAL": "1",
+      "DS_MERCHANT_TRANSACTIONTYPE": "0",
+      "DS_MERCHANT_URLKO": "http://www.prueba.com/urlKO.php",
+      "DS_MERCHANT_URLOK": "http://www.prueba.com/urlOK.php"
+  }
+
+    console.log('Base64: ', encodeBase64(JSON.stringify(value)));
+
+    console.log('Decodificado:')
+    console.log(decodeBase64(encodeBase64(JSON.stringify(value))));
+
+    console.log('ejemplo:')
+    console.log(decodeBase64("ew0KICAgICJEU19NRVJDSEFOVF9BTU9VTlQiOiAiMTQ1IiwNCiAgICAiRFNfTUVSQ0hBTlRfQ1VSUkVOQ1kiOiAiOTc4IiwNCiAgICAiRFNfTUVSQ0hBTlRfTUVSQ0hBTlRDT0RFIjogIjk5OTAwODg4MSIsDQogICAgIkRTX01FUkNIQU5UX01FUkNIQU5UVVJMIjogImh0dHA6Ly93d3cucHJ1ZWJhLmNvbS91cmxOb3RpZmljYWNpb24ucGhwIiwNCiAgICAiRFNfTUVSQ0hBTlRfT1JERVIiOiAiMTQ0NjA2ODU4MSIsDQogICAgIkRTX01FUkNIQU5UX1RFUk1JTkFMIjogIjEiLA0KICAgICJEU19NRVJDSEFOVF9UUkFOU0FDVElPTlRZUEUiOiAiMCIsDQogICAgIkRTX01FUkNIQU5UX1VSTEtPIjogImh0dHA6Ly93d3cucHJ1ZWJhLmNvbS91cmxLTy5waHAiLA0KICAgICJEU19NRVJDSEFOVF9VUkxPSyI6ICJodHRwOi8vd3d3LnBydWViYS5jb20vdXJsT0sucGhwIg0KfQ=="))
+
 });
 
 function sheetToJsonWithCellRefs(sheet) {
@@ -142,6 +163,11 @@ function printMatrix(matrix) {
 //Funcion para codificar el valor del el parametro Ds_MerchantParameters en base64 sin retorno de carros
 function encodeBase64(value) {
   return Buffer.from(value).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+}
+
+//Funcion para decodificar base 64
+function decodeBase64(value) {
+  return Buffer.from(value, 'base64').toString();
 }
 
 //Funcion para codificar en HMAC SHA256
