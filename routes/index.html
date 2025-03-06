@@ -28,6 +28,18 @@
           <input type="file" id="loadButton"></input>
         </div>
         <input type="file" id="file-input" multiple hidden>
+        <div id="successModal" class="hiddenSuccess hidden">
+          <div class="modal-content">
+            <span id="successClose" class="close">&times;</span>
+            <p>Archivo subido correctamente</p>
+          </div>
+        </div>
+        <div id="errorModal" class="hiddenError hidden">
+          <div class="modal-content">
+            <span id="errorClose" class="close">&times;</span>
+            <p>Ha ocurrido un error al subir el archivo</p>
+          </div>
+        </div>
     </div>
   </body>
   <script src="../scripts/renderer.js"></script>

@@ -43,3 +43,30 @@ body {
 #drop-area.drag-over {
     background-color: #a09292;
   }
+
+
+.hiddenSuccess {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+.hiddenError {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #f44336;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+.hidden{
+    display: none;
+}

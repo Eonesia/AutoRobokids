@@ -1,6 +1,39 @@
 //Este script es el que se ejecuta en el proceso de renderizado.
 //Se puede usar para acceder a funciones o variables del proceso principal y mostrarlas.
 
+//Mensajes de exito y error
+const successMessage = document.getElementById('successModal');
+const successClose = document.getElementById('successClose');
+const errorMessage = document.getElementById('errorModal');
+const errorClose = document.getElementById('errorClose');
+
+//Funcion para mostrar mensaje de exito eliminandole la clase hidden
+function showSuccessMessage() {
+    successMessage.classList.remove('hidden');
+}
+
+function hideSuccessMessage() {
+  successMessage.classList.add('hidden');
+}
+
+successClose.addEventListener('click', () => {
+    hideSuccessMessage();
+  }
+);
+
+//Funcion para mostrar mensaje de error eliminandole la clase hidden
+function showErrorMessage() {
+    errorMessage.classList.remove('hidden');
+}
+
+function hideErrorMessage() {
+  errorMessage.classList.add('hidden');
+}
+
+errorClose.addEventListener('click', () => {
+    hideErrorMessage();
+  }
+);
 
 //Drag&Drop
 const dropArea = document.getElementById('drop-area');
@@ -34,7 +67,6 @@ function handleDrop(e) {
       // Assigning the files to the hidden input from the first step
       fileInput.files = files;
   
-      // Processing the files for previews (next step)
       handleFiles(files);
     }
 }
@@ -50,8 +82,14 @@ function handleFiles(files) {
     reader.onloadend = function (e) {
       if (isValidFileType(file)) {
           //Logica si el archivo añadido es una tabla
-          console.log('Es un archivo de tabla');
+          showSuccessMessage();
           window.exposed.readExcel(file);
+      }else{
+          //Muestra una alerta si el archivo no es una tabla
+          showErrorMessage();
+          //Elimina el archivo del input
+          fileInput.value = '';
+          console.log(fileInput.files);
       }
     };
   }
