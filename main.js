@@ -5,6 +5,7 @@ const axios = require('axios')
 var XLSX = require("xlsx");
 const fs = require('fs');
 var request = require('request');
+const crypto = require('crypto');
 
 //Configura la ventana principal
 const createWindow = () => {
@@ -137,6 +138,18 @@ function printMatrix(matrix) {
     console.log(row);
   }
 }
+
+//Funcion para codificar el valor del el parametro Ds_MerchantParameters en base64 sin retorno de carros
+function encodeBase64(value) {
+  return Buffer.from(value).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+}
+
+//Funcion para codificar en HMAC SHA256
+function encodeHmacSha256(key, value) {
+  return crypto.createHmac('sha256', key).update(value).digest('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+}
+
+
 
 
 
