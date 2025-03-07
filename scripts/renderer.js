@@ -40,7 +40,12 @@ const dropArea = document.getElementById('drop-area');
 const fileInput = document.getElementById('file-input');
 const fileInputManual = document.getElementById('loadButton');
 const fileNameDisplay = document.getElementById('fileName');
+const receiptButton = document.getElementById('receiptButton');
 
+//Añade al boton un onlcick que triggerea la funcion de mandar la llamada
+receiptButton.addEventListener('click', () => {
+    window.exposed.sendReceipts();
+});
 //Funcion para evitar el comportamiento por defecto del "navegador"
 function preventDefaults(e) {
     e.preventDefault();
@@ -88,6 +93,9 @@ function handleFiles(files) {
           //Muestra el archivo tambien en el input manual
           fileNameDisplay.textContent = file.name;
           window.exposed.readExcel(file);
+          //Muestra el boton de enviar factura
+          receiptButton.classList.remove('hidden');
+
       }else{
           //Muestra una alerta si el archivo no es una tabla
           showErrorMessage();
@@ -112,6 +120,6 @@ dropArea.addEventListener('dragover', () => {
     dropArea.classList.add('drag-over');
 });
   
-  dropArea.addEventListener('dragleave', () => {
+dropArea.addEventListener('dragleave', () => {
     dropArea.classList.remove('drag-over');
 });

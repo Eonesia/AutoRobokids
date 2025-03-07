@@ -10,5 +10,8 @@ contextBridge.exposeInMainWorld('exposed', {
       ipcRenderer.send('read-excel', reader.result)
     }
     reader.readAsArrayBuffer(file)
+  },
+  sendReceipts: () => {
+    ipcRenderer.send('send-receipts')
   }
 })

@@ -70,3 +70,13 @@ body {
 .hidden{
     display: none;
 }
+
+
+.receiptButton {
+    background-color: #536DFE;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px;
+}

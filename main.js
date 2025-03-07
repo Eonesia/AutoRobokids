@@ -50,7 +50,7 @@ app.on('window-all-closed', () => {
 //Variables
 var filledMatrix = [];
 
-//Función que recibe el objeto de la hoja de cálculo y lo lee
+//Función que recibe el objeto de la hoja de cálculo y lo lee (Alomejor hace más cosas, cuando tengamos la clave lo sopesamos)
 ipcMain.on('read-excel', (event, data) => {
     console.log('read-excel');
     console.log('Excel main: ', data);
@@ -175,8 +175,34 @@ function encodeHmacSha256(key, value) {
   return crypto.createHmac('sha256', key).update(value).digest('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 }
 
+//Hay que hacer una funcion que itere la matriz y guarde en un vector la info de cada clientey que cuando la primera columna sea un espacio con valor null que pare de guardar info
+function getCustomerInfo(matrix) {
+  let customerInfo = [];
+  for (let i = 0; i < matrix.length; i++) {
+    if (matrix[0][i] === null) {
+      break;
+    }
+    customerInfo.push({
+      name: matrix[0][i],
+      mail: matrix[1][i],
+      phone: matrix[2][i],
+      amount: matrix[3][i]
+    });
+  }
+  return customerInfo;
+}
 
-
+//Fumcion que coje el vector de info de los clientes y llama a la API de redsys
+ipcMain.on('send-receipts', () => {
+  console.log('send-receipts');
+  /*
+  const customerInfo = getCustomerInfo(filledMatrix);
+  console.log('customerInfo: ', customerInfo);
+  for (const customer of customerInfo) {
+    callRestApi(customer.name, customer.mail, customer.phone, customer.amount);
+  }
+  */
+});
 
 
 //LLamada a la API de pruebas de redsys('https://sis-t.redsys.es:25443/sis/realizarPago) con axios
