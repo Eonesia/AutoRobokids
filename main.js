@@ -160,10 +160,10 @@ var unencrypted = {
 };
 */
 
-const amount = "";
-const customerMobile = "";
-const customerName = "";
-const customerMail = "";
+let amount = "";
+let customerMobile = "";
+let customerName = "";
+let customerMail = "";
 
 var unencrypted = {
   "DS_MERCHANT_TRANSACTIONTYPE": "F",
@@ -175,7 +175,7 @@ var unencrypted = {
   "DS_MERCHANT_TERMINAL": "999",
   "DS_MERCHANT_CURRENCY": "978",
   "DS_MERCHANT_P2F_EXPIRYDATE": "14400",
-  "DS_MERCHANT_ORDER": "2025TESTTPV1",
+  "DS_MERCHANT_ORDER": "2025TESTTPV2",
   "DS_MERCHANT_MERCHANTSIGNATURE": "TUH2qhVi2vR4fnLXFFgePRQGqeHTTT3P",
   "DS_MERCHANT_CUSTOMER_SMS_TEXT": "Robokids info@rbkds.com | Cobreo cuota (mes) @URL@",
   "DS_MERCHANT_P2F_XMLDATA": "<nombreComprador>NOMBRE DEL COMPRADOR</nombreComprador><direccionComprador>DIRECCION DEL COMPRADOR</direccionComprador> <textoLibre1>TEXTO LIBRE</textoLibre1><subjectMailCliente>ASUNTO EMAIL</subjectMailCliente>"
@@ -211,15 +211,17 @@ function encodeAndFormat(){
 function getCustomerInfo(matrix) {
   let customerInfo = [];
   for (let i = 0; i < matrix.length; i++) {
-    if (matrix[0][i] === null) {
+    if (matrix[i][0] === null) {
       break;
     }
+    printMatrix(matrix);
     customerInfo.push({
-      name: matrix[0][i],
-      mail: matrix[1][i],
-      phone: matrix[2][i],
-      amount: matrix[3][i]
+      name: matrix[i][2],
+      mail: matrix[i][1],
+      phone: matrix[i][3],
+      amount: matrix[i][4]
     });
+    console.log('customerInfo: ', customerInfo);
   }
   return customerInfo;
 }
@@ -228,7 +230,8 @@ function getCustomerInfo(matrix) {
 //var data = "";
 ipcMain.on('send-receipts', () => {
   console.log('send-receipts');
-  for (const customer of getCustomerInfo(filledMatrix)) {
+  const customers = getCustomerInfo(filledMatrix).slice(1);
+  for (const customer of customers) {
     amount = customer.amount.toString();
     customerMobile = customer.phone.toString();
     customerName = customer.name.toString();
