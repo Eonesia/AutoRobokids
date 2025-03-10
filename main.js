@@ -227,7 +227,7 @@ function getCustomerInfo(matrix) {
 }
 
 //Fumcion que coje el vector de info de los clientes y llama a la API de redsys
-//var data = "";
+var data = "";
 ipcMain.on('send-receipts', () => {
   console.log('send-receipts');
   const customers = getCustomerInfo(filledMatrix).slice(1);
@@ -238,10 +238,8 @@ ipcMain.on('send-receipts', () => {
     customerMail = customer.mail.toString();
     merchantData = encodeAndFormat()[0];
     signatureData = encodeAndFormat()[1];
-    callRestApi(merchantData, signatureData);
-    /*if(data.includes('errorCode')){
-      event.reply('error', data);
-    }*/
+    data = callRestApi(merchantData, signatureData);
+
   }
   //callRestApi();
   /*
@@ -255,10 +253,11 @@ ipcMain.on('send-receipts', () => {
 
 
 //Funcion que envia un error al proceso de renderizado
-/*ipcMain.on('error', (event, error) => {
+ipcMain.on('error', (event, data) => {
+  console.error('Error: ', data);
   event.reply('error', data);
 });
-*/
+
 
 
 
