@@ -5,7 +5,7 @@ const axios = require('axios')
 var XLSX = require("xlsx");
 const fs = require('fs');
 var request = require('request');
-const crypto = require('crypto');
+const cryptojs = require('crypto-js');
 
 //Configura la ventana principal
 const createWindow = () => {
@@ -175,6 +175,53 @@ function encodeHmacSha256(key, value) {
   return crypto.createHmac('sha256', key).update(value).digest('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 }
 
+//Vamos a porbar el codigo del muchacho de stackoverflow
+
+var merchant_key = "TUH2qhVi2vR4fnLXFFgePRQGqeHTTT3P";
+
+var unencrypted = {
+  "DS_MERCHANT_TRANSACTIONTYPE": "F",
+  "DS_MERCHANT_AMOUNT": "001",
+  "DS_MERCHANT_CUSTOMER_MOBILE": "687349178",
+  "DS_MERCHANT_CUSTOMER_MAIL": "emiliogomeznef@hotmail.com",
+  "DS_MERCHANT_TITULAR": "Emilio",
+  "DS_MERCHANT_MERCHANTCODE":"364130880",
+  "DS_MERCHANT_TERMINAL": "999",
+  "DS_MERCHANT_CURRENCY": "978",
+  "DS_MERCHANT_P2F_EXPIRYDATE": "14400",
+  "DS_MERCHANT_ORDER": "2025TESTTPV",
+  "DS_MERCHANT_MERCHANTSIGNATURE": "TUH2qhVi2vR4fnLXFFgePRQGqeHTTT3P",
+  "DS_MERCHANT_CUSTOMERSMSTEXT": "Prueba de pago",
+  "DS_MERCHANT_P2F_XMLDATA": "<nombreComprador>NOMBRE DEL COMPRADOR</nombreComprador><direccionComprador>DIRECCION DEL COMPRADOR</direccionComprador> <textoLibre1>TEXTO LIBRE</textoLibre1><subjectMailCliente>ASUNTO EMAIL</subjectMailCliente>"
+};
+
+// Base64 encoding of parameters
+var merchantWordArray = cryptojs.enc.Utf8.parse(JSON.stringify(unencrypted));
+var merchantBase64 = merchantWordArray.toString(cryptojs.enc.Base64);
+
+// Decode key
+var keyWordArray = cryptojs.enc.Base64.parse(merchant_key);
+
+// Generate transaction key
+var iv = cryptojs.enc.Hex.parse("0000000000000000");
+var cipher = cryptojs.TripleDES.encrypt(unencrypted.DS_MERCHANT_ORDER, keyWordArray, {
+  iv:iv,
+  mode: cryptojs.mode.CBC,
+  padding: cryptojs.pad.ZeroPadding
+});
+
+// Sign
+var signature = cryptojs.HmacSHA256(merchantBase64, cipher.ciphertext);
+var signatureBase64 = signature.toString(cryptojs.enc.Base64);
+
+// Done, we can return response
+var response = {
+  signatureVersion: "HMAC_SHA256_V1",
+  merchantParameters: merchantBase64,
+  signature: signatureBase64
+};
+
+
 //Hay que hacer una funcion que itere la matriz y guarde en un vector la info de cada clientey que cuando la primera columna sea un espacio con valor null que pare de guardar info
 function getCustomerInfo(matrix) {
   let customerInfo = [];
@@ -195,6 +242,7 @@ function getCustomerInfo(matrix) {
 //Fumcion que coje el vector de info de los clientes y llama a la API de redsys
 ipcMain.on('send-receipts', () => {
   console.log('send-receipts');
+  callRestApi();
   /*
   const customerInfo = getCustomerInfo(filledMatrix);
   console.log('customerInfo: ', customerInfo);
@@ -205,22 +253,20 @@ ipcMain.on('send-receipts', () => {
 });
 
 
+
+function EncryptData(unencrypted) {
+  var base64 = encodeBase64(JSON.stringify(unencrypted));
+  var signature = encodeHmacSha256('TUH2qhVi2vR4fnLXFFgePRQGqeHTTT3P', base64);
+  return signature;
+}
+
 //LLamada a la API de pruebas de redsys('https://sis-t.redsys.es:25443/sis/realizarPago) con axios
-function callRestApi(name, mail, phone, amount) {
-    axios.post('https://sis-t.redsys.es:25443/sis/realizarPago', {
-        "DS_MERCHANT_TRANSACTIONTYPE": "15",
-        "DS_MERCHANT_AMOUNT": "001",
-        "DS_MERCHANT_CUSTOMER_MOBILE": "687349178",
-        "DS_MERCHANT_CUSTOMER_MAIL": "emiliogomeznef@hotmail.com",
-        "DS_MERCHANT_TITULAR": "Emilio",
-        "DS_MERCHANT_MERCHANTCODE":"364130880",
-        "DS_MERCHANT_TERMINAL": "999",
-        "DS_MERCHANT_CURRENCY": "978",
-        "DS_MERCHANT_P2F_EXPIRYDATE": "14400",
-        "DS_MERCHANT_ORDER": "2025TESTTPV00",
-        "DS_MERCHANT_MERCHANTSIGNATURE": "sq7HjrUOBfKmC576ILgskD5srU870gJ7",
-        "DS_MERCHANT_CUSTOMERSMSTEXT": "Prueba de pago",
-        "DS_MERCHANT_P2F_XMLDATA": "<nombreComprador>NOMBRE DEL COMPRADOR</nombreComprador><direccionComprador>DIRECCION DEL COMPRADOR</direccionComprador> <textoLibre1>TEXTO LIBRE</textoLibre1><subjectMailCliente>ASUNTO EMAIL</subjectMailCliente>",
+//name, mail, phone, amount
+function callRestApi() {
+    axios.post('https://sis.redsys.es/sis/rest/trataPeticionREST', {
+        "DS_SIGNATUREVERSION": "HMAC_SHA256_V1",
+        "DS_MERCHANTPARAMETERS": merchantBase64,
+        "DS_SIGNATURE": signatureBase64
     })
     .then((response) => {
         console.log('Response: ', response);
