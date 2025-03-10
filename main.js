@@ -142,7 +142,7 @@ function printMatrix(matrix) {
 
 // Clave secreta
 var merchant_key = "TUH2qhVi2vR4fnLXFFgePRQGqeHTTT3P";
-
+/*
 var unencrypted = {
   "DS_MERCHANT_TRANSACTIONTYPE": "F",
   "DS_MERCHANT_AMOUNT": "001",
@@ -158,25 +158,53 @@ var unencrypted = {
   "DS_MERCHANT_CUSTOMER_SMS_TEXT": "Robokids info@rbkds.com | Cobreo cuota (mes) @URL@",
   "DS_MERCHANT_P2F_XMLDATA": "<nombreComprador>NOMBRE DEL COMPRADOR</nombreComprador><direccionComprador>DIRECCION DEL COMPRADOR</direccionComprador> <textoLibre1>TEXTO LIBRE</textoLibre1><subjectMailCliente>ASUNTO EMAIL</subjectMailCliente>"
 };
+*/
 
-// Codificacion de los parametros en base 64
-var merchantWordArray = cryptojs.enc.Utf8.parse(JSON.stringify(unencrypted));
-var merchantBase64 = merchantWordArray.toString(cryptojs.enc.Base64);
+const amount = "";
+const customerMobile = "";
+const customerName = "";
+const customerMail = "";
 
-// Codificacion de la clave secreta
-var keyWordArray = cryptojs.enc.Base64.parse(merchant_key);
+var unencrypted = {
+  "DS_MERCHANT_TRANSACTIONTYPE": "F",
+  "DS_MERCHANT_AMOUNT": "001",
+  "DS_MERCHANT_CUSTOMER_MOBILE": customerMobile,
+  "DS_MERCHANT_CUSTOMER_MAIL": customerName,
+  "DS_MERCHANT_TITULAR": customerMail,
+  "DS_MERCHANT_MERCHANTCODE":"364130880",
+  "DS_MERCHANT_TERMINAL": "999",
+  "DS_MERCHANT_CURRENCY": "978",
+  "DS_MERCHANT_P2F_EXPIRYDATE": "14400",
+  "DS_MERCHANT_ORDER": "2025TESTTPV1",
+  "DS_MERCHANT_MERCHANTSIGNATURE": "TUH2qhVi2vR4fnLXFFgePRQGqeHTTT3P",
+  "DS_MERCHANT_CUSTOMER_SMS_TEXT": "Robokids info@rbkds.com | Cobreo cuota (mes) @URL@",
+  "DS_MERCHANT_P2F_XMLDATA": "<nombreComprador>NOMBRE DEL COMPRADOR</nombreComprador><direccionComprador>DIRECCION DEL COMPRADOR</direccionComprador> <textoLibre1>TEXTO LIBRE</textoLibre1><subjectMailCliente>ASUNTO EMAIL</subjectMailCliente>"
+};
 
-// Generar la clave de la transaccion
-var iv = cryptojs.enc.Hex.parse("0000000000000000");
-var cipher = cryptojs.TripleDES.encrypt(unencrypted.DS_MERCHANT_ORDER, keyWordArray, {
-  iv:iv,
-  mode: cryptojs.mode.CBC,
-  padding: cryptojs.pad.ZeroPadding
-});
+function encodeAndFormat(){
+    // Codificacion de los parametros en base 64
+    var merchantWordArray = cryptojs.enc.Utf8.parse(JSON.stringify(unencrypted));
+    var merchantBase64 = merchantWordArray.toString(cryptojs.enc.Base64);
 
-// Hacer la firma
-var signature = cryptojs.HmacSHA256(merchantBase64, cipher.ciphertext);
-var signatureBase64 = signature.toString(cryptojs.enc.Base64);
+    // Codificacion de la clave secreta
+    var keyWordArray = cryptojs.enc.Base64.parse(merchant_key);
+
+    // Generar la clave de la transaccion
+    var iv = cryptojs.enc.Hex.parse("0000000000000000");
+    var cipher = cryptojs.TripleDES.encrypt(unencrypted.DS_MERCHANT_ORDER, keyWordArray, {
+      iv:iv,
+      mode: cryptojs.mode.CBC,
+      padding: cryptojs.pad.ZeroPadding
+    });
+
+    // Hacer la firma
+    var signature = cryptojs.HmacSHA256(merchantBase64, cipher.ciphertext);
+    var signatureBase64 = signature.toString(cryptojs.enc.Base64);
+    
+    // Devolvemos los parametros y la dfirma en base 64
+    return [merchantBase64, signatureBase64];
+}
+
 
 
 //Hay que hacer una funcion que itere la matriz y guarde en un vector la info de cada clientey que cuando la primera columna sea un espacio con valor null que pare de guardar info
@@ -199,7 +227,16 @@ function getCustomerInfo(matrix) {
 //Fumcion que coje el vector de info de los clientes y llama a la API de redsys
 ipcMain.on('send-receipts', () => {
   console.log('send-receipts');
-  callRestApi();
+  for (const customer of getCustomerInfo(filledMatrix)) {
+    amount = customer.amount.toString();
+    customerMobile = customer.phone.toString();
+    customerName = customer.name.toString();
+    customerMail = customer.mail.toString();
+    merchantData = encodeAndFormat()[0];
+    signatureData = encodeAndFormat()[1];
+    callRestApi(merchantData, signatureData);
+  }
+  //callRestApi();
   /*
   const customerInfo = getCustomerInfo(filledMatrix);
   console.log('customerInfo: ', customerInfo);
@@ -223,8 +260,7 @@ function EncryptData(unencrypted) {
 
 //LLamada a la API de pruebas de redsys('https://sis-t.redsys.es:25443/sis/realizarPago) con axios
 //name, mail, phone, amount
-let data = null;
-function callRestApi() {
+function callRestApi(merchantParameters, signature) {
     axios.post('https://sis.redsys.es/sis/rest/trataPeticionREST', {
         "DS_SIGNATUREVERSION": "HMAC_SHA256_V1",
         "DS_MERCHANTPARAMETERS": merchantBase64,
