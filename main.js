@@ -209,6 +209,10 @@ ipcMain.on('send-receipts', () => {
   */
 });
 
+ipcMain.on('error', (event, error) => {
+  event.reply('error', );
+});
+
 
 
 function EncryptData(unencrypted) {
@@ -219,6 +223,7 @@ function EncryptData(unencrypted) {
 
 //LLamada a la API de pruebas de redsys('https://sis-t.redsys.es:25443/sis/realizarPago) con axios
 //name, mail, phone, amount
+let data = null;
 function callRestApi() {
     axios.post('https://sis.redsys.es/sis/rest/trataPeticionREST', {
         "DS_SIGNATUREVERSION": "HMAC_SHA256_V1",
@@ -227,6 +232,7 @@ function callRestApi() {
     })
     .then((response) => {
         console.log('Response: ', response);
+        data = response.data;
         //Dunmp del contenido de response.data en un archivo de texto
         
         fs.writeFileSync('response.txt', JSON.stringify(response.data));
@@ -234,5 +240,6 @@ function callRestApi() {
     })
     .catch((error) => {
         console.error('Error: ', error);
+
     });
 }

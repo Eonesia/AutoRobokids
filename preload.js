@@ -13,5 +13,6 @@ contextBridge.exposeInMainWorld('exposed', {
   },
   sendReceipts: () => {
     ipcRenderer.send('send-receipts')
-  }
+  },
+  onError: (callback) => ipcRenderer.on('error', callback)
 })
