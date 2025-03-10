@@ -138,8 +138,9 @@ function printMatrix(matrix) {
 
 
 
-//Vamos a porbar el codigo del muchacho de stackoverflow
+//Codificacion y formateo de las variables
 
+// Clave secreta
 var merchant_key = "TUH2qhVi2vR4fnLXFFgePRQGqeHTTT3P";
 
 var unencrypted = {
@@ -158,14 +159,14 @@ var unencrypted = {
   "DS_MERCHANT_P2F_XMLDATA": "<nombreComprador>NOMBRE DEL COMPRADOR</nombreComprador><direccionComprador>DIRECCION DEL COMPRADOR</direccionComprador> <textoLibre1>TEXTO LIBRE</textoLibre1><subjectMailCliente>ASUNTO EMAIL</subjectMailCliente>"
 };
 
-// Base64 encoding of parameters
+// Codificacion de los parametros en base 64
 var merchantWordArray = cryptojs.enc.Utf8.parse(JSON.stringify(unencrypted));
 var merchantBase64 = merchantWordArray.toString(cryptojs.enc.Base64);
 
-// Decode key
+// Codificacion de la clave secreta
 var keyWordArray = cryptojs.enc.Base64.parse(merchant_key);
 
-// Generate transaction key
+// Generar la clave de la transaccion
 var iv = cryptojs.enc.Hex.parse("0000000000000000");
 var cipher = cryptojs.TripleDES.encrypt(unencrypted.DS_MERCHANT_ORDER, keyWordArray, {
   iv:iv,
@@ -173,16 +174,9 @@ var cipher = cryptojs.TripleDES.encrypt(unencrypted.DS_MERCHANT_ORDER, keyWordAr
   padding: cryptojs.pad.ZeroPadding
 });
 
-// Sign
+// Hacer la firma
 var signature = cryptojs.HmacSHA256(merchantBase64, cipher.ciphertext);
 var signatureBase64 = signature.toString(cryptojs.enc.Base64);
-
-// Done, we can return response
-var response = {
-  signatureVersion: "HMAC_SHA256_V1",
-  merchantParameters: merchantBase64,
-  signature: signatureBase64
-};
 
 
 //Hay que hacer una funcion que itere la matriz y guarde en un vector la info de cada clientey que cuando la primera columna sea un espacio con valor null que pare de guardar info
