@@ -166,24 +166,14 @@ let customerName = "";
 let customerMail = "";
 
 
+// Añadimos al codigo de pedido unos numeros para que no se repita
+function generateOrderCode() {
+  return "TESTTPV" + Math.floor(Math.random() * 10000);
+}
 
-var unencrypted = {
-  "DS_MERCHANT_TRANSACTIONTYPE": "F",
-  "DS_MERCHANT_AMOUNT": "001",
-  "DS_MERCHANT_CUSTOMER_MOBILE": customerMobile,
-  "DS_MERCHANT_CUSTOMER_MAIL": customerName,
-  "DS_MERCHANT_TITULAR": customerMail,
-  "DS_MERCHANT_MERCHANTCODE":"364130880",
-  "DS_MERCHANT_TERMINAL": "999",
-  "DS_MERCHANT_CURRENCY": "978",
-  "DS_MERCHANT_P2F_EXPIRYDATE": "14400",
-  "DS_MERCHANT_ORDER": "TESTTPV",
-  "DS_MERCHANT_MERCHANTSIGNATURE": "TUH2qhVi2vR4fnLXFFgePRQGqeHTTT3P",
-  "DS_MERCHANT_CUSTOMER_SMS_TEXT": "Robokids info@rbkds.com | Cobreo cuota (mes) @URL@",
-  "DS_MERCHANT_P2F_XMLDATA": "<nombreComprador>NOMBRE DEL COMPRADOR</nombreComprador><direccionComprador>DIRECCION DEL COMPRADOR</direccionComprador> <textoLibre1>TEXTO LIBRE</textoLibre1><subjectMailCliente>ASUNTO EMAIL</subjectMailCliente>"
-};
 
-function encodeAndFormat(){
+
+function encodeAndFormat(unencrypted){
     // Codificacion de los parametros en base 64
     var merchantWordArray = cryptojs.enc.Utf8.parse(JSON.stringify(unencrypted));
     var merchantBase64 = merchantWordArray.toString(cryptojs.enc.Base64);
@@ -236,10 +226,35 @@ ipcMain.on('send-receipts', () => {
   for (const customer of customers) {
     amount = customer.amount.toString();
     customerMobile = customer.phone.toString();
+    console.log('customerMobile: ', customer.phone.toString());
+    console.log('customerMobile: ', customerMobile);
     customerName = customer.name.toString();
     customerMail = customer.mail.toString();
-    merchantData = encodeAndFormat()[0];
-    signatureData = encodeAndFormat()[1];
+
+
+
+    var unencrypted = {
+      "DS_MERCHANT_TRANSACTIONTYPE": "F",
+      "DS_MERCHANT_AMOUNT": "001",
+      "DS_MERCHANT_CUSTOMER_MOBILE": customerMobile,
+      "DS_MERCHANT_CUSTOMER_MAIL": customerMail,
+      "DS_MERCHANT_TITULAR": customerName,
+      "DS_MERCHANT_MERCHANTCODE":"364130880",
+      "DS_MERCHANT_TERMINAL": "999",
+      "DS_MERCHANT_CURRENCY": "978",
+      "DS_MERCHANT_P2F_EXPIRYDATE": "14400",
+      "DS_MERCHANT_ORDER": generateOrderCode(),
+      "DS_MERCHANT_MERCHANTSIGNATURE": "TUH2qhVi2vR4fnLXFFgePRQGqeHTTT3P",
+      "DS_MERCHANT_CUSTOMER_SMS_TEXT": "Robokids info@rbkds.com | Cobreo cuota (mes) @URL@",
+      "DS_MERCHANT_P2F_XMLDATA": "<nombreComprador>NOMBRE DEL COMPRADOR</nombreComprador><direccionComprador>DIRECCION DEL COMPRADOR</direccionComprador> <textoLibre1>TEXTO LIBRE</textoLibre1><subjectMailCliente>ASUNTO EMAIL</subjectMailCliente>"
+    };
+
+
+
+
+    merchantData = encodeAndFormat(unencrypted)[0];
+    signatureData = encodeAndFormat(unencrypted)[1];
+    console.log('merchantData: ', unencrypted);
     data = callRestApi(merchantData, signatureData);
 
   }
