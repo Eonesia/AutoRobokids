@@ -225,6 +225,7 @@ function getCustomerInfo(matrix) {
 }
 
 //Fumcion que coje el vector de info de los clientes y llama a la API de redsys
+//var data = "";
 ipcMain.on('send-receipts', () => {
   console.log('send-receipts');
   for (const customer of getCustomerInfo(filledMatrix)) {
@@ -235,6 +236,9 @@ ipcMain.on('send-receipts', () => {
     merchantData = encodeAndFormat()[0];
     signatureData = encodeAndFormat()[1];
     callRestApi(merchantData, signatureData);
+    /*if(data.includes('errorCode')){
+      event.reply('error', data);
+    }*/
   }
   //callRestApi();
   /*
@@ -246,9 +250,12 @@ ipcMain.on('send-receipts', () => {
   */
 });
 
-ipcMain.on('error', (event, error) => {
-  event.reply('error', );
+
+//Funcion que envia un error al proceso de renderizado
+/*ipcMain.on('error', (event, error) => {
+  event.reply('error', data);
 });
+*/
 
 
 
@@ -263,12 +270,12 @@ function EncryptData(unencrypted) {
 function callRestApi(merchantParameters, signature) {
     axios.post('https://sis.redsys.es/sis/rest/trataPeticionREST', {
         "DS_SIGNATUREVERSION": "HMAC_SHA256_V1",
-        "DS_MERCHANTPARAMETERS": merchantBase64,
-        "DS_SIGNATURE": signatureBase64
+        "DS_MERCHANTPARAMETERS": merchantParameters,
+        "DS_SIGNATURE": signature
     })
     .then((response) => {
         console.log('Response: ', response);
-        data = response.data;
+        return response.data;
         //Dunmp del contenido de response.data en un archivo de texto
         
         fs.writeFileSync('response.txt', JSON.stringify(response.data));
