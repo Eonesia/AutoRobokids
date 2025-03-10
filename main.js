@@ -152,9 +152,9 @@ var unencrypted = {
   "DS_MERCHANT_TERMINAL": "999",
   "DS_MERCHANT_CURRENCY": "978",
   "DS_MERCHANT_P2F_EXPIRYDATE": "14400",
-  "DS_MERCHANT_ORDER": "2025TESTTPV",
+  "DS_MERCHANT_ORDER": "2025TESTTPV1",
   "DS_MERCHANT_MERCHANTSIGNATURE": "TUH2qhVi2vR4fnLXFFgePRQGqeHTTT3P",
-  "DS_MERCHANT_CUSTOMERSMSTEXT": "Prueba de pago",
+  "DS_MERCHANT_CUSTOMER_SMS_TEXT": "Robokids info@rbkds.com | Cobreo cuota (mes) @URL@",
   "DS_MERCHANT_P2F_XMLDATA": "<nombreComprador>NOMBRE DEL COMPRADOR</nombreComprador><direccionComprador>DIRECCION DEL COMPRADOR</direccionComprador> <textoLibre1>TEXTO LIBRE</textoLibre1><subjectMailCliente>ASUNTO EMAIL</subjectMailCliente>"
 };
 
@@ -240,39 +240,5 @@ function callRestApi() {
     })
     .catch((error) => {
         console.error('Error: ', error);
-    });
-}
-
-/*
-"DS_MERCHANT_TRANSACTIONTYPE":"15","DS_MERCHANT_AMOUNT":"001","DS_MERCHANT_CUSTOMER_MOBILE":"687349178","DS_MERCHANT_CUSTOMER_MAIL":"emiliogomeznef@hotmail.com","DS_MERCHANT_TITULAR":"Emilio","DS_MERCHANT_MERCHANTCODE":"364130880","DS_MERCHANT_TERMINAL":"999","DS_MERCHANT_CURRENCY":"978","DS_MERCHANT_P2F_EXPIRYDATE":"14400","DS_MERCHANT_ORDER":"2025TESTTPV00","DS_MERCHANT_CUSTOMERSMSTEXT":"Prueba de pago","DS_MERCHANT_P2F_XMLDATA":"<nombreComprador>NOMBRE DEL COMPRADOR</nombreComprador><direccionComprador>DIRECCION DEL COMPRADOR</direccionComprador><textoLibre1>TEXTO LIBRE</textoLibre1><subjectMailCliente>ASUNTO EMAIL</subjectMailCliente>"
-*/
-
-//LLamada a la API de pruebas de redsys('https://sis-t.redsys.es:25443/sis/realizarPago) sin axios
-
-function callRestApi2(name, mail, phone, amount) {
-    var options = {
-        'method': 'POST',
-        'url': 'https://sis-t.redsys.es:25443/sis/realizarPago',
-        'headers': {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-        "DS_MERCHANT_TRANSACTIONTYPE": "F",
-        "DS_MERCHANT_AMOUNT": 0.01,
-        "DS_MERCHANT_CUSTOMER_MOBILE": 687349178,
-        "DS_MERCHANT_CUSTOMER_MAIL": "emiliogomeznef@hotmail.com",
-        "DS_MERCHANT_TITULAR": "Emilio",
-        "DS_MERCHANT_MERCHANTCODE": "364130880",
-        "DS_MERCHANT_TERMINAL": "999",
-        "DS_MERCHANT_CURRENCY": "978",
-        "DS_MERCHANT_P2F_EXPIRYDATE": "14400",
-        "DS_MERCHANT_ORDER": "2025TESTTPV00",
-        "DS_MERCHANT_CUSTOMERSMSTEXT": "Prueba de pago",
-        "DS_MERCHANT_P2F_XMLDATA": "<nombreComprador>NOMBRE DEL COMPRADOR</nombreComprador><direccionComprador>DIRECCION DEL COMPRADOR</direccionComprador> <textoLibre1>TEXTO LIBRE</textoLibre1><subjectMailCliente>ASUNTO EMAIL</subjectMailCliente>",
-        }),
-    };
-    request(options, function (error, response) {
-        if (error) throw new Error(error);
-        console.log(response.body);
     });
 }
