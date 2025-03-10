@@ -14,5 +14,5 @@ contextBridge.exposeInMainWorld('exposed', {
   sendReceipts: () => {
     ipcRenderer.send('send-receipts')
   },
-  onError: (callback) => ipcRenderer.on('error', callback)
+  onData: (callback) => ipcRenderer.on('data', callback) // Nueva función para escuchar eventos 'data'
 })

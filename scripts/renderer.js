@@ -124,10 +124,10 @@ dropArea.addEventListener('dragleave', () => {
     dropArea.classList.remove('drag-over');
 });
 
-// Manejar errores enviados desde el proceso principal
-window.exposed.onError((event, errorMessage) => {
-  console.error('Error recibido del proceso principal:', errorMessage);
-  // Aquí puedes manejar el error, por ejemplo, mostrar un mensaje de error en la interfaz de usuario
-  alert(`Error: ${errorMessage}`);
-});
 
+// Escuchar eventos 'data' desde el proceso principal
+window.exposed.onData((event, data) => {
+  console.log('Data received from main process:', data);
+  alert('LALALALALALALA');
+  // Aquí puedes manejar los datos recibidos y actualizar la UI según sea necesario
+});
