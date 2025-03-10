@@ -165,6 +165,8 @@ let customerMobile = "";
 let customerName = "";
 let customerMail = "";
 
+
+
 var unencrypted = {
   "DS_MERCHANT_TRANSACTIONTYPE": "F",
   "DS_MERCHANT_AMOUNT": "001",
@@ -175,7 +177,7 @@ var unencrypted = {
   "DS_MERCHANT_TERMINAL": "999",
   "DS_MERCHANT_CURRENCY": "978",
   "DS_MERCHANT_P2F_EXPIRYDATE": "14400",
-  "DS_MERCHANT_ORDER": "2025TESTTPV2",
+  "DS_MERCHANT_ORDER": "TESTTPV",
   "DS_MERCHANT_MERCHANTSIGNATURE": "TUH2qhVi2vR4fnLXFFgePRQGqeHTTT3P",
   "DS_MERCHANT_CUSTOMER_SMS_TEXT": "Robokids info@rbkds.com | Cobreo cuota (mes) @URL@",
   "DS_MERCHANT_P2F_XMLDATA": "<nombreComprador>NOMBRE DEL COMPRADOR</nombreComprador><direccionComprador>DIRECCION DEL COMPRADOR</direccionComprador> <textoLibre1>TEXTO LIBRE</textoLibre1><subjectMailCliente>ASUNTO EMAIL</subjectMailCliente>"
