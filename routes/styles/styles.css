@@ -93,7 +93,8 @@ body {
 }
 
 .InputMssg{
-    width: 100%;
+    width: 60%;
+    margin-top: 1.5rem;
     display: flex;
     align-items: center;
 }
