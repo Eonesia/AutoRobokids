@@ -51,7 +51,7 @@ errorClose.addEventListener('click', () => {
 
 //Funcion para mostrar mensaje de error de la api eliminandole la clase hidden
 function showApiErrorMessage(message) {
-  document.getElementById('textError').textContent= "Ha ocurrido un error:" + message;
+  document.getElementById('textError').textContent= 'Ha ocurrido un error: ' + message;
   errorApiMessage.classList.remove('hidden');
 }
 
