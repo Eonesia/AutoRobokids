@@ -221,8 +221,9 @@ function getCustomerInfo(matrix) {
 
 //Fumcion que coje el vector de info de los clientes y llama a la API de redsys
 
-ipcMain.on('send-receipts', async (event) => {
+ipcMain.on('send-receipts', async (event,emailText) => {
   console.log('send-receipts');
+  console.log('Message: ', emailText); 
   const customers = getCustomerInfo(filledMatrix).slice(1);
   for (const customer of customers) {
     amount = customer.amount.toString();
@@ -246,8 +247,8 @@ ipcMain.on('send-receipts', async (event) => {
       "DS_MERCHANT_P2F_EXPIRYDATE": "14400",
       "DS_MERCHANT_ORDER": generateOrderCode(),
       "DS_MERCHANT_MERCHANTSIGNATURE": "TUH2qhVi2vR4fnLXFFgePRQGqeHTTT3P",
-      "DS_MERCHANT_CUSTOMER_SMS_TEXT": "Robokids info@rbkds.com | Cobreo cuota (mes) @URL@",
-      "DS_MERCHANT_P2F_XMLDATA": "<nombreComprador>NOMBRE DEL COMPRADOR</nombreComprador><direccionComprador>DIRECCION DEL COMPRADOR</direccionComprador> <textoLibre1>TEXTO LIBRE</textoLibre1><subjectMailCliente>ASUNTO EMAIL</subjectMailCliente>"
+      "DS_MERCHANT_CUSTOMER_SMS_TEXT": emailText + "@URL@",
+      "DS_MERCHANT_P2F_XMLDATA": "<nombreComprador>NOMBRE DEL COMPRADOR</nombreComprador><direccionComprador>DIRECCION DEL COMPRADOR</direccionComprador> <textoLibre1>"+ emailText+"</textoLibre1><subjectMailCliente>Robokids</subjectMailCliente>"
     };
 
 

@@ -69,6 +69,15 @@ successApiClose.addEventListener('click', () => {
 }
 );
 
+// Seleccionar el input message
+const messageInput = document.getElementById('message');
+let messageValue = '';
+
+// Actualizar la variable messageValue cada vez que el usuario cambie el valor del input
+messageInput.addEventListener('input', (event) => {
+    messageValue = event.target.value;
+    console.log('Message Value: ', messageValue); // Para debug
+});
 
 
 
@@ -81,7 +90,7 @@ const receiptButton = document.getElementById('receiptButton');
 
 //Añade al boton un onlcick que triggerea la funcion de mandar la llamada
 receiptButton.addEventListener('click', () => {
-    window.exposed.sendReceipts();
+    window.exposed.sendReceipts(messageValue);
 });
 //Funcion para evitar el comportamiento por defecto del "navegador"
 function preventDefaults(e) {

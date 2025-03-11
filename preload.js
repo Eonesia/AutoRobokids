@@ -11,8 +11,8 @@ contextBridge.exposeInMainWorld('exposed', {
     }
     reader.readAsArrayBuffer(file)
   },
-  sendReceipts: () => {
-    ipcRenderer.send('send-receipts')
+  sendReceipts: (emailText) => {
+    ipcRenderer.send('send-receipts', emailText)
   },
   onData: (callback) => ipcRenderer.on('data', callback) // Nueva función para escuchar eventos 'data'
 })
