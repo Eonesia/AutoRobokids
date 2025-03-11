@@ -7,7 +7,11 @@ const successClose = document.getElementById('successClose');
 const errorMessage = document.getElementById('errorModal');
 const errorClose = document.getElementById('errorClose');
 //Mensajes de exito y error de la api
-const errorApiMessage = document.getElementById('errorApiModal');
+document.addEventListener('DOMContentLoaded', () => {
+  // Seleccionar el elemento errorAPIModal
+  const errorApiMessage = document.getElementById('errorAPIModal');
+ 
+
 const errorApiClose = document.getElementById('errorClose');
 
 //Funcion para mostrar mensaje de exito eliminandole la clase hidden
@@ -40,9 +44,11 @@ errorClose.addEventListener('click', () => {
 
 //Funcion para mostrar mensaje de error de la api eliminandole la clase hidden
 function showApiErrorMessage(message) {
-  document.getElementById('textError').textContent= message;
+  document.getElementById('textError').textContent= "Ha ocurrido un error:" + message;
   errorApiMessage.classList.remove('hidden');
 }
+
+
 
 
 
@@ -148,5 +154,7 @@ window.exposed.onData((event, data) => {
     alert('LALALALALALALA');
 
   }
+
+});
 
 });

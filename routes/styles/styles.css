@@ -67,6 +67,17 @@ body {
     padding: 10px;
 }
 
+.hiddenEr {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #f44336;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
 .hidden{
     display: none;
 }
