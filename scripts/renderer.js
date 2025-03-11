@@ -9,10 +9,14 @@ const errorClose = document.getElementById('errorClose');
 //Mensajes de exito y error de la api
 document.addEventListener('DOMContentLoaded', () => {
   // Seleccionar el elemento errorAPIModal
-  const errorApiMessage = document.getElementById('errorAPIModal');
+    const errorApiMessage = document.getElementById('errorAPIModal');
+    const errorApiClose = document.getElementById('errorApiClose');
+    const successApiMessage = document.getElementById('successAPIModal'); 
+    const successApiClose = document.getElementById('successApiClose');
+
  
 
-const errorApiClose = document.getElementById('errorApiClose');
+
 
 //Funcion para mostrar mensaje de exito eliminandole la clase hidden
 function showSuccessMessage() {
@@ -51,6 +55,15 @@ function showApiErrorMessage(message) {
 errorApiClose.addEventListener('click', () => {
     errorApiMessage.classList.add('hidden');
   }
+);
+
+function showApiSuccessMessage() {
+  successApiMessage.classList.remove('hidden');
+}
+
+successApiClose.addEventListener('click', () => {
+  successApiMessage.classList.add('hidden');
+}
 );
 
 
@@ -157,7 +170,11 @@ window.exposed.onData((event, data) => {
     fileInputManual.value = '';
     fileNameDisplay.textContent = '';
   }else{
-    alert('LALALALALALALA');
+    showApiSuccessMessage();
+    //Elimina el archivo del input
+    fileInput.value = '';
+    fileInputManual.value = '';
+    fileNameDisplay.textContent = '';
 
   }
 
