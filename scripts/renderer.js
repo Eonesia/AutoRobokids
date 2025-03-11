@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const errorApiMessage = document.getElementById('errorAPIModal');
  
 
-const errorApiClose = document.getElementById('errorClose');
+const errorApiClose = document.getElementById('errorApiClose');
 
 //Funcion para mostrar mensaje de exito eliminandole la clase hidden
 function showSuccessMessage() {
@@ -48,6 +48,10 @@ function showApiErrorMessage(message) {
   errorApiMessage.classList.remove('hidden');
 }
 
+errorApiClose.addEventListener('click', () => {
+    errorApiMessage.classList.add('hidden');
+  }
+);
 
 
 
@@ -119,6 +123,7 @@ function handleFiles(files) {
           //Elimina el archivo del input
           fileInput.value = '';
           fileInputManual.value = '';
+          fileNameDisplay.textContent = '';
           console.log(fileInput.files);
       }
     };
@@ -150,6 +155,7 @@ window.exposed.onData((event, data) => {
     //Elimina el archivo del input
     fileInput.value = '';
     fileInputManual.value = '';
+    fileNameDisplay.textContent = '';
   }else{
     alert('LALALALALALALA');
 
