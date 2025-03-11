@@ -6,6 +6,9 @@ const successMessage = document.getElementById('successModal');
 const successClose = document.getElementById('successClose');
 const errorMessage = document.getElementById('errorModal');
 const errorClose = document.getElementById('errorClose');
+//Mensajes de exito y error de la api
+const errorApiMessage = document.getElementById('errorApiModal');
+const errorApiClose = document.getElementById('errorClose');
 
 //Funcion para mostrar mensaje de exito eliminandole la clase hidden
 function showSuccessMessage() {
@@ -34,6 +37,14 @@ errorClose.addEventListener('click', () => {
     hideErrorMessage();
   }
 );
+
+//Funcion para mostrar mensaje de error de la api eliminandole la clase hidden
+function showApiErrorMessage(message) {
+  document.getElementById('textError').textContent= message;
+  errorApiMessage.classList.remove('hidden');
+}
+
+
 
 //Drag&Drop
 const dropArea = document.getElementById('drop-area');
@@ -128,6 +139,14 @@ dropArea.addEventListener('dragleave', () => {
 // Escuchar eventos 'data' desde el proceso principal
 window.exposed.onData((event, data) => {
   console.log('Data received from main process:', data);
-  alert('LALALALALALALA');
-  // Aquí puedes manejar los datos recibidos y actualizar la UI según sea necesario
+  if(data.includes('SIS')){
+    showApiErrorMessage(data);
+    //Elimina el archivo del input
+    fileInput.value = '';
+    fileInputManual.value = '';
+  }else{
+    alert('LALALALALALALA');
+
+  }
+
 });
