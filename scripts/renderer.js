@@ -1,18 +1,20 @@
 //Este script es el que se ejecuta en el proceso de renderizado.
 //Se puede usar para acceder a funciones o variables del proceso principal y mostrarlas.
 
-//Mensajes de exito y error
+
+//Mensajes de exito y error de la api
+document.addEventListener('DOMContentLoaded', () => {
+  //Mensajes de exito y error
 const successMessage = document.getElementById('successModal');
 const successClose = document.getElementById('successClose');
 const errorMessage = document.getElementById('errorModal');
 const errorClose = document.getElementById('errorClose');
-//Mensajes de exito y error de la api
-document.addEventListener('DOMContentLoaded', () => {
   // Seleccionar el elemento errorAPIModal
     const errorApiMessage = document.getElementById('errorAPIModal');
     const errorApiClose = document.getElementById('errorApiClose');
     const successApiMessage = document.getElementById('successAPIModal'); 
     const successApiClose = document.getElementById('successApiClose');
+    const successText = document.getElementById('successText');
 
  
 
@@ -29,6 +31,7 @@ function hideSuccessMessage() {
 
 successClose.addEventListener('click', () => {
     hideSuccessMessage();
+    //successText.textContent = 'Archivo subido correctamente';
   }
 );
 
@@ -163,19 +166,23 @@ dropArea.addEventListener('dragleave', () => {
 // Escuchar eventos 'data' desde el proceso principal
 window.exposed.onData((event, data) => {
   console.log('Data received from main process:', data);
+  if (data === undefined){
+    //showApiSuccessMessage();
+    successText.textContent = 'Operación completada correctamente';
+    showSuccessMessage();
+    
+    //Elimina el archivo del input
+    fileInput.value = '';
+    fileInputManual.value = '';
+    fileNameDisplay.textContent = '';
+
+  }else
   if(data.includes('SIS')){
     showApiErrorMessage(data);
     //Elimina el archivo del input
     fileInput.value = '';
     fileInputManual.value = '';
     fileNameDisplay.textContent = '';
-  }else{
-    showApiSuccessMessage();
-    //Elimina el archivo del input
-    fileInput.value = '';
-    fileInputManual.value = '';
-    fileNameDisplay.textContent = '';
-
   }
 
 });

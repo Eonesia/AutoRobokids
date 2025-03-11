@@ -169,7 +169,7 @@ let customerMail = "";
 
 // Añadimos al codigo de pedido unos numeros para que no se repita
 function generateOrderCode() {
-  return "TESTTPVLALALALALALALALALA" + Math.floor(Math.random() * 10000);
+  return "TESTTPV" + Math.floor(Math.random() * 10000);
 }
 
 
