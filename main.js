@@ -333,7 +333,11 @@ var filename;
 ipcMain.on('save-file', (event, file) => {
   console.log('save-file');
   const saveDir = path.join(__dirname, 'excels');
-  if (!fs.existsSync(saveDir)) {
+  if (fs.existsSync(saveDir)) {
+    if (!fs.lstatSync(saveDir).isDirectory()) {
+        throw new Error(`La ruta ${saveDir} no es un directorio`);
+    }
+} else {
     fs.mkdirSync(saveDir, { recursive: true });
 }
   filename = file.name;
