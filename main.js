@@ -1,6 +1,6 @@
 //Imports
 const { app, BrowserWindow, ipcMain } = require('electron/main')
-const path = require('path')
+const path = require('node:path')
 const axios = require('axios')
 var XLSX = require("xlsx");
 const fs = require('fs');
@@ -332,14 +332,10 @@ var filename;
 // Manejar el evento save-file para guardar el archivo en una carpeta específico
 ipcMain.on('save-file', (event, file) => {
   console.log('save-file');
-  const saveDir = path.join(__dirname, 'excels');
+  const saveDir = path.join(app.getPath('userData'), 'excels');
   console.log(saveDir);
-  if (fs.existsSync(saveDir)) {
-    if (!fs.lstatSync(saveDir).isDirectory()) {
-        throw new Error(`La ruta ${saveDir} no es un directorio`);
-    }
-} else {
-    fs.mkdir(saveDir, { recursive: true });
+  if (!fs.existsSync(saveDir)) {
+    fs.mkdirSync(saveDir, { recursive: true });
 }
   filename = file.name;
   const savePath = path.join(saveDir, file.name);
