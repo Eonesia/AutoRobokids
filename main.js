@@ -333,9 +333,9 @@ var filename;
 ipcMain.on('save-file', (event, file) => {
   console.log('save-file');
   const saveDir = path.join(__dirname, 'excels');
-  if (!fs.existsSync(saveDir)) {
+  /*if (!fs.existsSync(saveDir)) {
       fs.mkdirSync(saveDir);
-  }
+  }*/
   filename = file.name;
   const savePath = path.join(saveDir, file.name);
   const buffer = Buffer.from(file.buffer);
