@@ -16,6 +16,11 @@ const errorClose = document.getElementById('errorClose');
     const successApiClose = document.getElementById('successApiClose');
     const successText = document.getElementById('successText');
 
+  //loading
+  const uploadSection = document.getElementById('drop-area');
+  const loadingGif = document.getElementById('loadinggif');
+  const loadingdiv = document.getElementById('loading'); 
+
  
 
 
@@ -91,6 +96,16 @@ const receiptButton = document.getElementById('receiptButton');
 //Añade al boton un onlcick que triggerea la funcion de mandar la llamada
 receiptButton.addEventListener('click', () => {
     window.exposed.sendReceipts(messageValue);
+    uploadSection.classList.add('hidden');
+    loadingGif.classList.remove('hidden');
+    loadingdiv.classList.remove('hidden');
+    // Después de unos segundos, volver a mostrar la sección de carga y ocultar el GIF
+    setTimeout(() => {
+      uploadSection.classList.remove('hidden');
+      loadingdiv.classList.add('hidden');
+      loadingGif.classList.add('hidden');
+    }, 2000); // Cambia el tiempo según sea necesario
+
 });
 //Funcion para evitar el comportamiento por defecto del "navegador"
 function preventDefaults(e) {
@@ -179,24 +194,27 @@ dropArea.addEventListener('dragleave', () => {
 // Escuchar eventos 'data' desde el proceso principal
 window.exposed.onData((event, data) => {
   console.log('Data received from main process:', data);
-  if (data === undefined){
-    //showApiSuccessMessage();
-    successText.textContent = 'Operación completada correctamente';
-    showSuccessMessage();
-    
-    //Elimina el archivo del input
-    fileInput.value = '';
-    fileInputManual.value = '';
-    fileNameDisplay.textContent = '';
-
-  }else
-  if(data.includes('SIS')){
-    showApiErrorMessage(data);
-    //Elimina el archivo del input
-    fileInput.value = '';
-    fileInputManual.value = '';
-    fileNameDisplay.textContent = '';
-  }
+  setTimeout(() => {
+    if (data === undefined){
+      //showApiSuccessMessage();
+      successText.textContent = 'Operación completada correctamente';
+      showSuccessMessage();
+      
+      //Elimina el archivo del input
+      fileInput.value = '';
+      fileInputManual.value = '';
+      fileNameDisplay.textContent = '';
+  
+    }else
+    if(data.includes('SIS')){
+      showApiErrorMessage(data);
+      //Elimina el archivo del input
+      fileInput.value = '';
+      fileInputManual.value = '';
+      fileNameDisplay.textContent = '';
+    }
+  }, 2000); 
+  
 
 });
 
