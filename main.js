@@ -332,7 +332,7 @@ var filename;
 // Manejar el evento save-file para guardar el archivo en una carpeta específico
 ipcMain.on('save-file', (event, file) => {
   console.log('save-file');
-  const saveDir = path.join(app.getPath('userData'), 'excels');
+  const saveDir = path.join(app.getPath('desktop'), 'excels');
   console.log(saveDir);
   if (!fs.existsSync(saveDir)) {
     fs.mkdirSync(saveDir, { recursive: true });
