@@ -99,6 +99,7 @@ receiptButton.addEventListener('click', () => {
     uploadSection.classList.add('hidden');
     loadingGif.classList.remove('hidden');
     loadingdiv.classList.remove('hidden');
+    document.getElementById('message').value = '';
     // Después de unos segundos, volver a mostrar la sección de carga y ocultar el GIF
     setTimeout(() => {
       uploadSection.classList.remove('hidden');

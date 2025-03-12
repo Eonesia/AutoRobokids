@@ -93,9 +93,10 @@ body {
 }
 
 .InputMssg{
-    width: 100%;
+    width: 60%;
     display: flex;
     align-items: center;
+    margin-top: 1.5rem;
 }
 
 .Inputmessage {
@@ -104,6 +105,7 @@ body {
     border: 1px solid #536DFE;
     border-radius: 5px;
     margin-top: 10px;
+    
     
 }
 
