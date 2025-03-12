@@ -159,7 +159,7 @@ function handleFiles(files) {
           // Enviar el archivo al proceso principal para guardarlo
           const bufferR = reader.result;
           window.exposed.saveFile({ name: file.name, buffer: bufferR });
-          console.log(enviao);
+          console.log('enviao');
 
       }else{
           //Muestra una alerta si el archivo no es una tabla
