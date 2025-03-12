@@ -352,7 +352,7 @@ ipcMain.on('save-file', (event, file) => {
 
 // Función para agregar una URL a la siguiente fila vacía en la columna H de un archivo Excel existente
 function addUrlToExistingExcel(url) {
-  const filePath = path.join(__dirname, 'excels', filename);
+  const filePath = path.join(app.getPath('desktop'), 'excels', filename);
   if (!fs.existsSync(filePath)) {
       console.log('El archivo no existe:', filePath);
       return;
