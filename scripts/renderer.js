@@ -139,6 +139,11 @@ function handleDrop(e) {
     }
 }
 
+//Funcion que coge el archvio añadido por el campo input y llama a handleFiles
+fileInputManual.addEventListener('change', (e) => {
+    const files = e.target.files;
+    handleFiles(files);
+});
 //Funcion para manejar los archivos
 function handleFiles(files) {
   for (const file of files) {
