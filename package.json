@@ -45,14 +45,14 @@
       "target": [
         "nsis"
       ],
-      "icon": "assets/icons/icon.ico"
+      "icon": "assets/icons/logo-redondo.ico"
     },
     "linux": {
       "target": [
         "AppImage"
       ],
       "category": "Utility",
-      "icon": "assets/icons/icon.png"
+      "icon": "assets/icons/logo redondo.png"
     }
   }
 
