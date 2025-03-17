@@ -51,6 +51,7 @@ app.on('window-all-closed', () => {
 //Variables
 var filledMatrix = [];
 
+
 //Función que recibe el objeto de la hoja de cálculo y lo lee (Alomejor hace más cosas, cuando tengamos la clave lo sopesamos)
 ipcMain.on('read-excel', (event, data) => {
     console.log('read-excel');
@@ -60,6 +61,7 @@ ipcMain.on('read-excel', (event, data) => {
         event.reply('read-excel-reply', null);
         return;
     }
+
     const workbook = XLSX.read(data, {type: 'array'});
     const firstSheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[firstSheetName];
@@ -263,9 +265,16 @@ ipcMain.on('send-receipts', async (event,emailText) => {
     try {
       var data = await callRestApi(merchantData, signatureData);
       console.log('data al final del to: ', data);
+      const JSON = decodeBase64ToJson(data.Ds_MerchantParameters);
+      console.log('JSON: ', JSON);
+      const url = JSON.Ds_UrlPago2Fases;
+      console.log('url: ', url);
+      addUrlToExistingExcel(url);
+      console.log('URL añadida al archivo Excel');
+      
 
       // Enviar datos al proceso de renderizado
-      event.sender.send('data', data);
+      event.sender.send('data', data.errorCode);
     } catch (error) {
       console.error('Error al llamar a la API: ', error);
       event.sender.send('error', error.message);
@@ -299,7 +308,7 @@ async function callRestApi(merchantParameters, signature) {
           "DS_MERCHANTPARAMETERS": merchantParameters,
           "DS_SIGNATURE": signature
       });
-      const returnData = response.data.errorCode;
+      const returnData = response.data;
       console.log('returnData antes de returnealos: ', returnData);
       
 
@@ -309,3 +318,74 @@ async function callRestApi(merchantParameters, signature) {
       throw error;
   }
 }
+// Función para decodificar de Base64 a string
+function decode64(data) {
+  return Buffer.from(data, 'base64').toString('utf-8');
+}
+
+// Función para decodificar de Base64 a JSON
+function decodeBase64ToJson(data) {
+  const decodedString = decode64(data);
+  return JSON.parse(decodedString);
+}
+
+
+var filename;
+// Manejar el evento save-file para guardar el archivo en una carpeta específico
+ipcMain.on('save-file', (event, file) => {
+  console.log('save-file');
+  const saveDir = path.join(app.getPath('desktop'), 'excels');
+  console.log(saveDir);
+  if (!fs.existsSync(saveDir)) {
+    fs.mkdirSync(saveDir, { recursive: true });
+}
+  filename = file.name;
+  const savePath = path.join(saveDir, file.name);
+  const buffer = Buffer.from(file.buffer);
+  fs.writeFile(savePath, buffer, (err) => {
+      if (err) {
+          console.error('Error al guardar el archivo:', err);
+          event.reply('error', 'Error al guardar el archivo');
+      } else {
+          console.log('Archivo guardado en:', savePath);
+      }
+  });
+});
+
+// Función para agregar una URL a la siguiente fila vacía en la columna H de un archivo Excel existente
+function addUrlToExistingExcel(url) {
+  const filePath = path.join(app.getPath('desktop'), 'excels', filename);
+  if (!fs.existsSync(filePath)) {
+      console.log('El archivo no existe:', filePath);
+      return;
+  }
+
+  // Leer el archivo Excel existente
+  const workbook = XLSX.readFile(filePath);
+  const firstSheetName = workbook.SheetNames[0];
+  const worksheet = workbook.Sheets[firstSheetName];
+
+  // Obtener el rango de la hoja
+  const range = XLSX.utils.decode_range(worksheet['!ref']);
+
+  // Encontrar la próxima fila vacía en la columna H
+  let nextRow = range.s.r + 1;
+  while (worksheet[XLSX.utils.encode_cell({ c: 7, r: nextRow })]) {
+      nextRow++;
+  }
+    // Agregar la URL en la próxima fila vacía en la columna H
+    const cellAddress = { c: 7, r: nextRow }; // Columna H es la columna 7 (0-indexed)
+    const cellRef = XLSX.utils.encode_cell(cellAddress);
+    worksheet[cellRef] = { t: 's', v: url };
+
+    // Actualizar el rango de la hoja
+    range.e.c = Math.max(range.e.c, 7);
+    range.e.r = Math.max(range.e.r, nextRow);
+    worksheet['!ref'] = XLSX.utils.encode_range(range);
+
+    // Guardar el archivo Excel actualizado
+    XLSX.writeFile(workbook, filePath);
+    console.log('Archivo Excel actualizado guardado en:', filePath);
+}
+
+

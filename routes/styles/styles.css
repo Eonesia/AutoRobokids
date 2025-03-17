@@ -3,7 +3,7 @@ body {
     font-family: 'Roboto', sans-serif;
     margin: 0px;
     padding: 0;
-    background-color: #f5f5f5;
+    background-color: #ffffff;
 }
 
 .navbar {
@@ -97,6 +97,7 @@ body {
     margin-top: 1.5rem;
     display: flex;
     align-items: center;
+    margin-top: 1.5rem;
 }
 
 .Inputmessage {
@@ -106,4 +107,18 @@ body {
     border-radius: 5px;
     margin-top: 10px;
     
+    
+}
+
+.loading{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+
+}
+
+.uploadIcon{
+    height: 200px;
+    width: 200px;
 }

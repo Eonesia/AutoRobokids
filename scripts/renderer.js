@@ -16,6 +16,11 @@ const errorClose = document.getElementById('errorClose');
     const successApiClose = document.getElementById('successApiClose');
     const successText = document.getElementById('successText');
 
+  //loading
+  const uploadSection = document.getElementById('drop-area');
+  const loadingGif = document.getElementById('loadinggif');
+  const loadingdiv = document.getElementById('loading'); 
+
  
 
 
@@ -91,6 +96,17 @@ const receiptButton = document.getElementById('receiptButton');
 //Añade al boton un onlcick que triggerea la funcion de mandar la llamada
 receiptButton.addEventListener('click', () => {
     window.exposed.sendReceipts(messageValue);
+    uploadSection.classList.add('hidden');
+    loadingGif.classList.remove('hidden');
+    loadingdiv.classList.remove('hidden');
+    document.getElementById('message').value = '';
+    // Después de unos segundos, volver a mostrar la sección de carga y ocultar el GIF
+    setTimeout(() => {
+      uploadSection.classList.remove('hidden');
+      loadingdiv.classList.add('hidden');
+      loadingGif.classList.add('hidden');
+    }, 2000); // Cambia el tiempo según sea necesario
+
 });
 //Funcion para evitar el comportamiento por defecto del "navegador"
 function preventDefaults(e) {
@@ -124,6 +140,11 @@ function handleDrop(e) {
     }
 }
 
+//Funcion que coge el archvio añadido por el campo input y llama a handleFiles
+fileInputManual.addEventListener('change', (e) => {
+    const files = e.target.files;
+    handleFiles(files);
+});
 //Funcion para manejar los archivos
 function handleFiles(files) {
   for (const file of files) {
@@ -141,6 +162,10 @@ function handleFiles(files) {
           window.exposed.readExcel(file);
           //Muestra el boton de enviar factura
           receiptButton.classList.remove('hidden');
+          // Enviar el archivo al proceso principal para guardarlo
+          const bufferR = reader.result;
+          window.exposed.saveFile({ name: file.name, buffer: bufferR });
+          console.log('enviao');
 
       }else{
           //Muestra una alerta si el archivo no es una tabla
@@ -175,24 +200,27 @@ dropArea.addEventListener('dragleave', () => {
 // Escuchar eventos 'data' desde el proceso principal
 window.exposed.onData((event, data) => {
   console.log('Data received from main process:', data);
-  if (data === undefined){
-    //showApiSuccessMessage();
-    successText.textContent = 'Operación completada correctamente';
-    showSuccessMessage();
-    
-    //Elimina el archivo del input
-    fileInput.value = '';
-    fileInputManual.value = '';
-    fileNameDisplay.textContent = '';
-
-  }else
-  if(data.includes('SIS')){
-    showApiErrorMessage(data);
-    //Elimina el archivo del input
-    fileInput.value = '';
-    fileInputManual.value = '';
-    fileNameDisplay.textContent = '';
-  }
+  setTimeout(() => {
+    if (data === undefined){
+      //showApiSuccessMessage();
+      successText.textContent = 'Operación completada correctamente';
+      showSuccessMessage();
+      
+      //Elimina el archivo del input
+      fileInput.value = '';
+      fileInputManual.value = '';
+      fileNameDisplay.textContent = '';
+  
+    }else
+    if(data.includes('SIS')){
+      showApiErrorMessage(data);
+      //Elimina el archivo del input
+      fileInput.value = '';
+      fileInputManual.value = '';
+      fileNameDisplay.textContent = '';
+    }
+  }, 2000); 
+  
 
 });
 
