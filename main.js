@@ -50,7 +50,7 @@ app.on('window-all-closed', () => {
 
 //Variables
 var filledMatrix = [];
-
+var customerCode = "";
 //Función que recibe el objeto de la hoja de cálculo y lo lee (Alomejor hace más cosas, cuando tengamos la clave lo sopesamos)
 ipcMain.on('read-excel', (event, data) => {
     console.log('read-excel');
@@ -61,6 +61,8 @@ ipcMain.on('read-excel', (event, data) => {
         return;
     }
     const workbook = XLSX.read(data, {type: 'array'});
+    console.log('workbook: ', workbook);
+    customerCode = workbook.Props.SheetNames[0];
     const firstSheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[firstSheetName];
     const jsonData = sheetToJsonWithCellRefs(worksheet);
@@ -169,7 +171,10 @@ let customerMail = "";
 
 // Añadimos al codigo de pedido unos numeros para que no se repita
 function generateOrderCode() {
-  return "TESTTPV" + Math.floor(Math.random() * 10000);
+  //Cojemos las primeras cinco letra de la variable customerCode
+
+  var orderCodePrefix = customerCode.substring(0, 5);
+  return orderCodePrefix + Math.floor(Math.random() * 10000000);
 }
 
 
@@ -249,7 +254,7 @@ ipcMain.on('send-receipts', async (event,emailText) => {
       "DS_MERCHANT_P2F_EXPIRYDATE": "14400",
       "DS_MERCHANT_ORDER": generateOrderCode(),
       "DS_MERCHANT_MERCHANTSIGNATURE": "TUH2qhVi2vR4fnLXFFgePRQGqeHTTT3P",
-      "DS_MERCHANT_CUSTOMER_SMS_TEXT": emailText + " @URL@",
+      "DS_MERCHANT_CUSTOMER_SMS_TEXT": emailText + "\n" + "@URL@",
       "DS_MERCHANT_P2F_XMLDATA": "<nombreComprador>"+ customerName +"</nombreComprador><direccionComprador>DIRECCION DEL COMPRADOR</direccionComprador> <textoLibre1>"+ emailText +"</textoLibre1><subjectMailCliente>Robokids</subjectMailCliente>"
     };
 
