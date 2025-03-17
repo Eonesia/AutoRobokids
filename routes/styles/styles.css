@@ -94,6 +94,7 @@ body {
 
 .InputMssg{
     width: 60%;
+    margin-top: 1.5rem;
     display: flex;
     align-items: center;
     margin-top: 1.5rem;

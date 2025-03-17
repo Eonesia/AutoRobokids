@@ -229,6 +229,8 @@ ipcMain.on('send-receipts', async (event,emailText) => {
   const customers = getCustomerInfo(filledMatrix).slice(1);
   for (const customer of customers) {
     amount = customer.amount.toString();
+    //Eliminamos la coma
+    amount = amount.replace('.', '');
     customerMobile = customer.phone.toString();
     console.log('customerMobile: ', customer.phone.toString());
     console.log('customerMobile: ', customerMobile);
@@ -239,7 +241,7 @@ ipcMain.on('send-receipts', async (event,emailText) => {
 
     var unencrypted = {
       "DS_MERCHANT_TRANSACTIONTYPE": "F",
-      "DS_MERCHANT_AMOUNT": "001",
+      "DS_MERCHANT_AMOUNT": amount,
       "DS_MERCHANT_CUSTOMER_MOBILE": customerMobile,
       "DS_MERCHANT_CUSTOMER_MAIL": customerMail,
       "DS_MERCHANT_TITULAR": customerName,
@@ -249,8 +251,8 @@ ipcMain.on('send-receipts', async (event,emailText) => {
       "DS_MERCHANT_P2F_EXPIRYDATE": "14400",
       "DS_MERCHANT_ORDER": generateOrderCode(),
       "DS_MERCHANT_MERCHANTSIGNATURE": "TUH2qhVi2vR4fnLXFFgePRQGqeHTTT3P",
-      "DS_MERCHANT_CUSTOMER_SMS_TEXT": emailText + "@URL@",
-      "DS_MERCHANT_P2F_XMLDATA": "<nombreComprador>NOMBRE DEL COMPRADOR</nombreComprador><direccionComprador>DIRECCION DEL COMPRADOR</direccionComprador> <textoLibre1>"+ emailText+"</textoLibre1><subjectMailCliente>Robokids</subjectMailCliente>"
+      "DS_MERCHANT_CUSTOMER_SMS_TEXT": emailText + " @URL@",
+      "DS_MERCHANT_P2F_XMLDATA": "<nombreComprador>"+ customerName +"</nombreComprador><direccionComprador>DIRECCION DEL COMPRADOR</direccionComprador> <textoLibre1>"+ emailText +"</textoLibre1><subjectMailCliente>Robokids</subjectMailCliente>"
     };
 
 
