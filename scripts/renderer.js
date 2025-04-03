@@ -95,6 +95,12 @@ const receiptButton = document.getElementById('receiptButton');
 
 //Añade al boton un onlcick que triggerea la funcion de mandar la llamada
 receiptButton.addEventListener('click', () => {
+    
+    // Reproducir el sonido
+    const audio = new Audio('../assets/Cash_Register_Open1.wav');
+    audio.play();
+
+
     window.exposed.sendReceipts(messageValue);
     uploadSection.classList.add('hidden');
     loadingGif.classList.remove('hidden');
